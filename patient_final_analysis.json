@@ -1,0 +1,13 @@
+{
+  "condition_summary": "21-year-old female with a severe dry cough and fever, onset May 14, 2024,  with a history of type 2 diabetes mellitus, currently managed with metformin, sulfonylureas, and DPP-4 inhibitors.  Reports mild dust allergy and a past head surgery (2 years prior).",
+  "severity": "moderate",
+  "missing_info_questions": [
+    "Can you provide details on the type of head surgery performed?",
+    "What is your recent HbA1c level?",
+    "Please describe the severity of your fever (e.g., temperature).",
+    "How long have you had the fever?",
+    "Are you experiencing any other symptoms such as body aches, nasal congestion, or fatigue?"
+  ],
+  "recommended_specialist": "Endocrinologist/General Practitioner",
+  "reasoning": "The patient's self-reported 'severe' cough and fever, coupled with pre-existing type 2 diabetes, necessitates evaluation by a specialist.  While respiratory symptoms suggest possible infection, the diabetes management and potential impact of the infection on blood sugar control warrants consultation with an endocrinologist who can consider the interplay of diabetes and the current respiratory illness. A General Practitioner could also be appropriate, given the need for a comprehensive assessment of all symptoms and consideration of multiple factors."
+}
