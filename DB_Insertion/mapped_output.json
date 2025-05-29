@@ -1,0 +1,57 @@
+[
+  {
+    "table": "patients",
+    "columns": {
+      "full_name": "nirvana",
+      "DOB": "1997-01-01",
+      "age": 28,
+      "gender": "female"
+    }
+  },
+  {
+    "table": "symptoms",
+    "records": [
+      {
+        "patient_id": 1,
+        "symptom_description": "7/10 headache",
+        "severity": "7/10",
+        "duration": "7 days"
+      },
+      {
+        "patient_id": 1,
+        "symptom_description": "episodic vertigo",
+        "severity": null,
+        "duration": "7 days"
+      }
+    ]
+  },
+  {
+    "table": "surgeries",
+    "records": [
+      {
+        "patient_id": 1,
+        "procedure_name": "Head surgery",
+        "surgery_date": null
+      }
+    ]
+  },
+  {
+    "table": "medications",
+    "records": [
+      {
+        "patient_id": 1,
+        "medication_name": "Insulin",
+        "dosage": "4 units",
+        "start_date": null,
+        "end_date": null
+      },
+      {
+        "patient_id": 1,
+        "medication_name": "Metformin",
+        "dosage": "500mg",
+        "start_date": null,
+        "end_date": null
+      }
+    ]
+  }
+]

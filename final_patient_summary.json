@@ -1,0 +1,25 @@
+{
+  "summary": "Patient Navya Naladala, born 07-01-2004, presented with a 4-day history of fever (102\u00b0F), frequent cough, and occasional sneezing.  No other symptoms reported. No past medical history, current medications, allergies, or relevant family history.  No smoking or alcohol use.",
+  "patient_data": {
+    "name": "Navya Naladala",
+    "dob": "07-01-2004",
+    "symptoms": "Fever (102\u00b0F), frequent cough, occasional sneezing",
+    "symptom_duration": "4 days",
+    "past_surgeries": "None",
+    "current_medications": "None",
+    "allergies": "None",
+    "family_history": "None reported",
+    "smoking": "No",
+    "alcohol_use": "No",
+    "vital_signs": "Not recorded",
+    "email": "navyanaladala237@gmail.com",
+    "phone": "9148870999",
+    "address": "9/11,1dt cross,kaveri layout ,marathahalli,banglore,560037"
+  },
+  "followup_notes": "Vital signs (heart rate, respiratory rate, blood pressure) were not obtained.  Patient reported no difficulty breathing.",
+  "recommended_specialist": [
+    "Cardiology","Pulmonology"
+  ],
+  "specialist_rationale": "The patient presents with fever, cough, and sneezing, suggestive of a respiratory infection.  A Family Physician is recommended for initial assessment and management of common illnesses. Given the symptom duration and fever, consultation with an Infectious Disease Specialist may be warranted to rule out more serious infections and determine the most appropriate treatment plan.",
+  "status": "complete"
+}
