@@ -1,23 +1,5 @@
-# Set the correct Python version for Streamlit Cloud or local venvs
-python==3.11.*
-
-# Load .env files
 python-dotenv
-
-# Gemini / Google Generative AI SDK
 google-generativeai
-
-# LangGraph for building agentic workflows
 langgraph
-
-# Streamlit for UI
 streamlit
-
-# MySQL connector
 mysql-connector-python
-
-# LangChain for LLM orchestration
-langchain
-
-# Required for compatibility with some Google APIs
-protobuf==3.20.3
