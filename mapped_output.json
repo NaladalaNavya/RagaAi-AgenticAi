@@ -2,34 +2,19 @@
   {
     "table": "patients",
     "columns": {
-      "full_name": "Navya Naladala",
-      "age": 20,
-      "DOB": "2004-07-01",
-      "email": "navyanaladala237@gmail.com",
-      "phone": "9148870999",
-      "address": "9/11,1dt cross,kaveri layout ,marathahalli,banglore,560037"
+      "full_name": "Nikhil lekkala",
+      "age": 21,
+      "gender": "male",
+      "address": "3-25,2nd cross,marathahalli,banglore ,560037"
     }
   },
   {
     "table": "symptoms",
     "records": [
       {
-        "patient_id": null,
-        "symptom_description": "Fever (102\u00b0F)",
-        "severity": "Moderate",
-        "duration": "4 days"
-      },
-      {
-        "patient_id": null,
-        "symptom_description": "Frequent cough",
+        "symptom_description": "runny nose",
         "severity": null,
-        "duration": "4 days"
-      },
-      {
-        "patient_id": null,
-        "symptom_description": "Occasional sneezing",
-        "severity": "Mild",
-        "duration": "4 days"
+        "duration": "5 days"
       }
     ]
   }

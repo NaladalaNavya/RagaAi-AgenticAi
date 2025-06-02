@@ -55,7 +55,7 @@ def main():
     patient_email = data["patient_data"].get("email")
 
     if not patient_email:
-        print("❌ Patient email not found in JSON.")
+        print(" Patient email not found in JSON.")
         return
 
     conn = mysql.connector.connect(**db_config)
@@ -64,7 +64,7 @@ def main():
     try:
         patient_id = get_patient_id_by_email(cursor, patient_email)
         if not patient_id:
-            print(f"❌ Patient with email {patient_email} not found in database.")
+            print(f" Patient with email {patient_email} not found in database.")
             return
 
         for specialist in recommended_specialists:
@@ -105,9 +105,9 @@ def main():
                                     patient_id, doctor["doctor_id"], check_date.date(), slot_time, 1
                                 ))
                                 conn.commit()
-                                print(f"✅ Appointment booked with Dr. {doctor['full_name']} on {check_date.date()} at {slot_time}")
+                                print(f" Appointment booked with Dr. {doctor['full_name']} on {check_date.date()} at {slot_time}")
                                 return
-        print("❌ No available slots found for any recommended specialist in the next 7 days.")
+        print(" No available slots found for any recommended specialist in the next 7 days.")
 
     finally:
         cursor.close()

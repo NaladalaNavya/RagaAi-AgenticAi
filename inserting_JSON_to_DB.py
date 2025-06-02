@@ -54,13 +54,14 @@ def insert_data_from_mapped_json(file_path):
             elif "records" in item:
                 insert_multiple_records(cursor, table, item["records"])
         conn.commit()
-        print("✅ All data inserted into the database.")
+        print(" All data inserted into the database.")
     except Exception as e:
         conn.rollback()
-        print(f"❌ Error inserting data: {e}")
+        print(f" Error inserting data: {e}")
     finally:
         cursor.close()
         conn.close()
 
 if __name__ == "__main__":
     insert_data_from_mapped_json("mapped_output.json")
+    

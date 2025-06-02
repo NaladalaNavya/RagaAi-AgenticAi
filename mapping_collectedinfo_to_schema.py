@@ -85,8 +85,8 @@ def get_mapped_output(raw_data):
 # 5. Main driver
 def main():
     if len(sys.argv) < 2:
-        print("❌ Please provide the input JSON file as an argument.")
-        print("✅ Example: python mapping.py final_patient_summary.json")
+        print(" Please provide the input JSON file as an argument.")
+        print(" Example: python mapping.py final_patient_summary.json")
         return
 
     input_file = sys.argv[1]
@@ -95,23 +95,23 @@ def main():
     try:
         raw_data = load_input_json(input_file)
     except FileNotFoundError:
-        print(f"❌ File not found: {input_file}")
+        print(f" File not found: {input_file}")
         return
 
-    print("🔄 Sending data to Gemini for mapping...")
+    print(" Sending data to Gemini for mapping...")
     mapped_json_str = get_mapped_output(raw_data)
 
     try:
         mapped_json = json.loads(mapped_json_str)
     except json.JSONDecodeError:
-        print("❌ LLM response is not valid JSON. Here's the raw text:")
+        print(" LLM response is not valid JSON. Here's the raw text:")
         print(mapped_json_str)
         return
 
     with open(output_file, "w") as f:
         json.dump(mapped_json, f, indent=2)
 
-    print(f"✅ Mapped output saved to: {output_file}")
+    print(f" Mapped output saved to: {output_file}")
 
 if __name__ == "__main__":
     main()
