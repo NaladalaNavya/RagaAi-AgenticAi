@@ -5,5 +5,4 @@ streamlit
 mysql-connector-python
 langchain
 protobuf==3.20.3
-mediapipe==0.10.11
 tensorflow-intel==2.15.1
