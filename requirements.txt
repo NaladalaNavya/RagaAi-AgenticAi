@@ -3,3 +3,6 @@ google-generativeai
 langgraph
 streamlit
 mysql-connector-python
+mysql
+dotenv
+langchain

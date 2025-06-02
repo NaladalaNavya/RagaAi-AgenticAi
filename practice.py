@@ -375,36 +375,40 @@ def main():
         else:
             st.info("Please provide the missing information.")
 
-    elif st.session_state.step == "mapping":
+        elif st.session_state.step == "mapping":
         st.header("Step 5: Map Collected Info to DB Schema")
         # Always use the latest confirmed data
         patient_json = st.session_state.get("final_patient_json", {})
         if patient_json:
-            # Overwrite the file with the latest data
-            with open("final_patient_summary.json", "w") as f:
-                json.dump(patient_json, f, indent=2)
-            # Now call the mapping script
-            result = subprocess.run(
-                ["python", "mapping_collectedinfo_to_schema.py", "final_patient_summary.json"],
-                capture_output=True, text=True
-            )
-            st.text(result.stdout)
-            if result.stderr:
-                st.error(result.stderr)
-            mapped_file = "mapped_output.json"
-            if os.path.exists(mapped_file):
-                with open(mapped_file, "r") as f:
-                    mapped_result = json.load(f)
-                st.session_state.mapped_json = mapped_result
-                st.subheader("Mapped JSON for Database")
-                st.json(mapped_result)
-                if st.button("Continue"):
-                    st.session_state.step = "db_insert"
-                    st.rerun()
-            else:
-                st.error("Mapping failed: mapped_output.json not found.")
+            # Optionally save patient_json to disk (already done in confirm step)
+            st.write("Patient JSON data ready for mapping.")
+
+            # Call your mapping function from the imported module
+            try:
+                # Assuming your mapping module has a function like:
+                # map_to_db_schema(patient_json) -> dict
+                mapped_data = mapping_collectedinfo_to_schema.map_to_db_schema(patient_json)
+                st.success("Mapping to DB schema completed successfully.")
+                st.json(mapped_data)  # Show mapped data for verification
+
+                # Save mapped data if you want
+                with open("mapped_patient_data.json", "w") as f:
+                    json.dump(mapped_data, f, indent=2)
+
+                # Proceed to next step or finish workflow
+                st.session_state.mapped_patient_data = mapped_data
+                st.session_state.step = "done"  # or any next step
+                st.write("Mapping complete. You can now use this data to insert into your DB.")
+            except Exception as e:
+                st.error(f"Mapping failed: {e}")
         else:
-            st.error("No patient data found for mapping.")
+            st.warning("No confirmed patient JSON data available yet.")
+
+    elif st.session_state.step == "done":
+        st.header("Process Complete")
+        st.success("All steps completed successfully!")
+        st.write("You can now proceed with database insertion or further processing.")
+
 
     elif st.session_state.step == "db_insert":
         st.header("Step 6: Review and Insert Data into Database")
