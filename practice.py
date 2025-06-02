@@ -375,7 +375,7 @@ def main():
         else:
             st.info("Please provide the missing information.")
 
-        elif st.session_state.step == "mapping":
+    elif st.session_state.step == "mapping":
         st.header("Step 5: Map Collected Info to DB Schema")
         # Always use the latest confirmed data
         patient_json = st.session_state.get("final_patient_json", {})
