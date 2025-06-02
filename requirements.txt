@@ -3,8 +3,6 @@ google-generativeai
 langgraph
 streamlit
 mysql-connector-python
-mysql
-dotenv
 langchain
 protobuf==3.20.3
 mediapipe==0.10.11
