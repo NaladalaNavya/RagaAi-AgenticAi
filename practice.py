@@ -376,17 +376,33 @@ def main():
             st.info("Please provide the missing information.")
 
     elif st.session_state.step == "mapping":
-        st.header("Step 5: Map Patient Data to Database Schema")
-        final_patient_json = st.session_state.get("final_patient_json", {})
-        if not final_patient_json:
-            st.error("No patient data available. Please complete the intake process first.")
-            st.stop()
-
-        # Call the mapping function
-        mapped_result = mapping_collectedinfo_to_schema.map_patient_data(final_patient_json)
-        if mapped_result:
-            st.success("Patient data successfully mapped to database schema.")
-            st.json(mapped_result)
+        st.header("Step 5: Map Collected Info to DB Schema")
+        # Always use the latest confirmed data
+        patient_json = st.session_state.get("final_patient_json", {})
+        if patient_json:
+            # Optionally save patient_json to disk (already done in confirm step)
+            st.write("Patient JSON data ready for mapping.")
+    
+            # Call your mapping function from the imported module
+            try:
+                # Assuming your mapping module has a function like:
+                # get_mapped_output(patient_json) -> dict
+                mapped_result = mapping_collectedinfo_to_schema.get_mapped_output(patient_json)
+                st.success("Mapping to DB schema completed successfully.")
+                st.json(mapped_result)  # Show mapped data for verification
+    
+                # Save mapped data if you want
+                with open("mapped_patient_data.json", "w") as f:
+                    json.dump(mapped_result, f, indent=2)
+    
+                # Proceed to next step or finish workflow
+                st.session_state.mapped_patient_data = mapped_result
+                st.session_state.step = "done"  # or any next step
+                st.write("Mapping complete. You can now use this data to insert into your DB.")
+            except Exception as e:
+                st.error(f"Mapping failed: {e}")
+        else:
+            st.warning("No confirmed patient JSON data available yet.")
 
     elif st.session_state.step == "db_insert":
         st.header("Step 6: Review and Insert Data into Database")
