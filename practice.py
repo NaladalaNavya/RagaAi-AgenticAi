@@ -399,6 +399,7 @@ def main():
                 st.session_state.mapped_patient_data = mapped_result
                 st.session_state.step = "db_insert"  # or any next step
                 st.write("Mapping complete. You can now use this data to insert into your DB.")
+                st.rerun()
             except Exception as e:
                 st.error(f"Mapping failed: {e}")
         else:
