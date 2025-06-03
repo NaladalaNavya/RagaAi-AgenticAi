@@ -165,7 +165,7 @@ Begin your focused analysis now.
         # Check for finalized status
         result = extract_json(reply.text)
         if result.get("status") == "finalized":
-            return result.get("updated_patient_data", st.session_state.updated_data), result.get("notes", ""), True
+            return result.get("updated_patient_data", st.session_state.get("updated_data", {})), result.get("notes", ""), True
         else:
             st.rerun()
 
