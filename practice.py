@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import mapping_collectedinfo_to_schema  # <-- Add this import at the top
 import subprocess
-
+import mysql.connector
 # Load environment variables
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
