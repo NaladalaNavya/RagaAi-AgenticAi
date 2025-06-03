@@ -8,20 +8,22 @@ import subprocess
 import pymysql
 
 # Load secrets
-db_host = st.secrets["DB_HOST"]
-db_port = st.secrets["DB_PORT"]
-db_user = st.secrets["DB_USER"]
-db_password = st.secrets["DB_PASSWORD"]
-db_name = st.secrets["DB_NAME"]
+DB_HOST = "mysql.railway.internal"
+DB_PORT = 10373
+DB_USER = "root"
+DB_PASSWORD = "XsWXLlpGcfGdlAnNSpEkzEZnMvqcBbMp"
+DB_NAME = "railway"
 
 # Connect to the database
 connection = pymysql.connect(
-    host=db_host,
-    port=int(db_port),
-    user=db_user,
-    password=db_password,
-    database=db_name
+    host=DB_HOST,
+    port=DB_PORT,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    database=DB_NAME
 )
+
+print("Connected successfully!")
 
 
 # Load environment variables
