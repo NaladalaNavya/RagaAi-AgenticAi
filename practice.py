@@ -416,7 +416,7 @@ def main():
                 st.json(mapped_result)  # Show mapped data for verification
     
                 # Save mapped data if you want
-                with open("mapped_patient_data.json", "w") as f:
+                with open("mapped_output.json", "w") as f:
                     json.dump(mapped_result, f, indent=2)
     
                 # Proceed to next step or finish workflow
