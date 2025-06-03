@@ -1,6 +1,5 @@
 import os
 import json
-import mysql.connector
 from dotenv import load_dotenv
 import pymysql
 
@@ -17,7 +16,7 @@ db_config = {
 
 # Connect to DB
 def connect_to_db():
-    return mysql.connector.connect(**db_config)
+    return pymysql.connect(**db_config)
 
 # Insert single-record table
 def insert_single_record(cursor, table, columns):
