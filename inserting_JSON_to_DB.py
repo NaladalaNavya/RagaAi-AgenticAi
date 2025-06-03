@@ -1,6 +1,10 @@
 import os
 import json
 import pymysql
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (if you use one)
+load_dotenv()
 
 db_config = {
     "host": os.getenv("DB_HOST"),
