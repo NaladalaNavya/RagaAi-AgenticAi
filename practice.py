@@ -396,10 +396,11 @@ def main():
                     json.dump(mapped_result, f, indent=2)
     
                 # Proceed to next step or finish workflow
-                st.session_state.mapped_patient_data = mapped_result
-                st.session_state.step = "db_insert"  # or any next step
+                st.session_state.mapped_patient_data = mapped_result # or any next step
                 st.write("Mapping complete. You can now use this data to insert into your DB.")
+                st.session_state.step = "db_insert" 
                 st.rerun()
+                return
             except Exception as e:
                 st.error(f"Mapping failed: {e}")
         else:
