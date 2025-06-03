@@ -1,10 +1,6 @@
 import os
 import json
-from dotenv import load_dotenv
 import pymysql
-
-# Load DB credentials
-load_dotenv()
 
 db_config = {
     "host": os.getenv("DB_HOST"),
