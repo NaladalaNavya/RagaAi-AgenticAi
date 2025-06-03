@@ -149,7 +149,10 @@ Begin your focused analysis now.
     else:
         reply = st.session_state.followup_response
 
-    st.write(f" {st.session_state.followup_history[-1][1]}")
+    if st.session_state.followup_history:
+        st.write(f" {st.session_state.followup_history[-1][1]}")
+    else:
+        st.write("No follow-up history available.")
 
     user_input = st.text_input("Your answer here:", key="followup_input")
     submit = st.button("Submit follow-up answer", key="followup_submit")
