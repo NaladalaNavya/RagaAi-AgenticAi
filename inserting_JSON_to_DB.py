@@ -2,6 +2,7 @@ import os
 import json
 import mysql.connector
 from dotenv import load_dotenv
+import pymysql
 
 # Load DB credentials
 load_dotenv()
