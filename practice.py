@@ -6,6 +6,18 @@ import google.generativeai as genai
 import mapping_collectedinfo_to_schema  # <-- Add this import at the top
 import subprocess
 import mysql.connector
+
+# MySQL connection using Streamlit secrets
+conn = mysql.connector.connect(
+    host=st.secrets["DB_HOST"],
+    user=st.secrets["DB_USER"],
+    password=st.secrets["DB_PASSWORD"],
+    database=st.secrets["DB_NAME"]
+)
+
+cursor = conn.cursor()
+
+
 # Load environment variables
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
