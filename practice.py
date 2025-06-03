@@ -5,17 +5,23 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import mapping_collectedinfo_to_schema  # <-- Add this import at the top
 import subprocess
-import mysql.connector
+import pymysql
 
-# MySQL connection using Streamlit secrets
-conn = mysql.connector.connect(
-    host=st.secrets["DB_HOST"],
-    user=st.secrets["DB_USER"],
-    password=st.secrets["DB_PASSWORD"],
-    database=st.secrets["DB_NAME"]
+# Load secrets
+db_host = st.secrets["DB_HOST"]
+db_port = st.secrets["DB_PORT"]
+db_user = st.secrets["DB_USER"]
+db_password = st.secrets["DB_PASSWORD"]
+db_name = st.secrets["DB_NAME"]
+
+# Connect to the database
+connection = pymysql.connect(
+    host=db_host,
+    port=int(db_port),
+    user=db_user,
+    password=db_password,
+    database=db_name
 )
-
-cursor = conn.cursor()
 
 
 # Load environment variables
