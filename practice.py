@@ -4,6 +4,7 @@ import streamlit as st
 from dotenv import load_dotenv
 import google.generativeai as genai
 import mapping_collectedinfo_to_schema  # <-- Add this import at the top
+import mysql.connector
 import subprocess
 import pymysql
 
