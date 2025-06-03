@@ -8,7 +8,7 @@ import subprocess
 import pymysql
 
 # Load secrets
-DB_HOST = "mysql.railway.internal"
+DB_HOST = "shinkansen.proxy.rlwy.net"
 DB_PORT = 10373
 DB_USER = "root"
 DB_PASSWORD = "XsWXLlpGcfGdlAnNSpEkzEZnMvqcBbMp"
