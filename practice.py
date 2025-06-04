@@ -8,25 +8,6 @@ import mysql.connector
 import subprocess
 import pymysql
 
-# Load secrets
-"""DB_HOST = "shinkansen.proxy.rlwy.net"
-DB_PORT = 10373
-DB_USER = "root"
-DB_PASSWORD = "XsWXLlpGcfGdlAnNSpEkzEZnMvqcBbMp"
-DB_NAME = "hospital_system_new"
-
-# Connect to the database
-connection = pymysql.connect(
-    host=DB_HOST,
-    port=DB_PORT,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    database=DB_NAME
-)
-
-print("Connected successfully!")"""
-
-
 # Load environment variables
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
