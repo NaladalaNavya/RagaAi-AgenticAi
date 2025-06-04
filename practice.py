@@ -314,165 +314,166 @@ Begin your check and ask for missing info as needed.
 
 
 def main():
-    st.title("Medical Intake Assistant")
+    st.set_page_config(page_title="Medical Intake Assistant", page_icon="🩺", layout="centered")
+    st.title("🩺 Medical Intake Assistant")
 
-    # --- MANUAL OVERRIDE: Start from mapping step if file exists ---
-    if "step" not in st.session_state:
-        st.session_state.step = "intake"
-    # --------------------------------------------------------------
+    steps = [
+        "intake",
+        "followup",
+        "specialist",
+        "confirm",
+        "mapping",
+        "db_insert",
+        "booking",
+        "done"
+    ]
+    current_step = st.session_state.get("step", "intake")
 
-    if st.session_state.step == "intake":
-        st.header("Step 1: Patient Intake")
-        patient_data, summary, done = dynamic_medical_intake()
-        if done:
-            st.success("Patient intake completed.")
-            st.write("Summary:", summary)
-            st.session_state.patient_data = patient_data
-            st.session_state.summary = summary
-            st.session_state.step = "followup"
-            st.rerun()
+    current_index = steps.index(current_step)
+    progress = (current_index + 1) / len(steps)
+    st.progress(progress)
+    st.caption(f"Step {current_index + 1} of {len(steps)}: {current_step.replace('_', ' ').title()}")
 
-    elif st.session_state.step == "followup":
-        st.header("Step 2: Follow-up Questions for Missing Info")
-        patient_data = st.session_state.get("patient_data", {})
-        updated_data, notes, done = post_analysis_and_followup(patient_data)
-        if done:
-            st.success("Follow-up questions complete.")
-            st.write("Notes:", notes)
-            st.session_state.patient_data = updated_data
-            st.session_state.followup_notes = notes
-            st.session_state.step = "specialist"
-            st.rerun()
+    with st.container():
+        if current_step == "intake":
+            st.header("Step 1: Patient Intake")
+            patient_data, summary, done = dynamic_medical_intake()
+            if done:
+                st.success("✅ Patient intake completed.")
+                with st.expander("View Summary"):
+                    st.write(summary)
+                st.session_state.patient_data = patient_data
+                st.session_state.summary = summary
+                st.session_state.step = "followup"
+                st.experimental_rerun()
 
-    elif st.session_state.step == "specialist":
-        st.header("Step 3: Specialist Recommendation")
-        patient_data = st.session_state.get("patient_data", {})
-        specialists, rationale = recommend_specialist(patient_data)
-        st.write("Recommended Specialists:", specialists)
-        st.write("Rationale:", rationale)
-        st.session_state.recommended_specialist = specialists
-        st.session_state.specialist_rationale = rationale
-        st.session_state.step = "confirm"
-        st.rerun()
+        elif current_step == "followup":
+            st.header("Step 2: Follow-up Questions for Missing Info")
+            patient_data = st.session_state.get("patient_data", {})
+            updated_data, notes, done = post_analysis_and_followup(patient_data)
+            if done:
+                st.success("✅ Follow-up questions complete.")
+                with st.expander("View Follow-up Notes"):
+                    st.write(notes)
+                st.session_state.patient_data = updated_data
+                st.session_state.followup_notes = notes
+                st.session_state.step = "specialist"
+                st.experimental_rerun()
 
-    elif st.session_state.step == "confirm":
-        st.header("Step 4: Confirm Mandatory Fields")
-        # Build the final JSON in your required format
-        patient_data = st.session_state.get("patient_data", {})
-        summary = st.session_state.get("summary", "")
-        followup_notes = st.session_state.get("followup_notes", "")
-        recommended_specialist = st.session_state.get("recommended_specialist", [])
-        specialist_rationale = st.session_state.get("specialist_rationale", "")
-        final_json = {
-            "summary": summary,
-            "patient_data": patient_data,
-            "followup_notes": followup_notes,
-            "recommended_specialist": recommended_specialist,
-            "specialist_rationale": specialist_rationale,
-            "status": "complete"
-        }
-        updated_data, confirmed, message = confirm_mandatory_fields(final_json)
-        if confirmed:
-            st.success(message)
-            st.write("Final Patient Data:", updated_data)
-            st.session_state.final_patient_json = updated_data
-            with open("final_patient_summary.json", "w") as f:
-                json.dump(updated_data, f, indent=2)
-            st.session_state.step = "mapping"  # <-- Move to mapping step
-            st.rerun()
-        else:
-            st.info("Please provide the missing information.")
+        elif current_step == "specialist":
+            st.header("Step 3: Specialist Recommendation")
+            patient_data = st.session_state.get("patient_data", {})
+            specialists, rationale = recommend_specialist(patient_data)
+            st.info(f"**Recommended Specialists:** {', '.join(specialists)}")
+            with st.expander("Rationale for Recommendation"):
+                st.write(rationale)
+            st.session_state.recommended_specialist = specialists
+            st.session_state.specialist_rationale = rationale
+            if st.button("Confirm Recommendations & Continue"):
+                st.session_state.step = "confirm"
+                st.experimental_rerun()
 
-    elif st.session_state.step == "mapping":
-        st.header("Step 5: Map Collected Info to DB Schema")
-        # Always use the latest confirmed data
-        patient_json = st.session_state.get("final_patient_json", {})
-        if patient_json:
-            # Optionally save patient_json to disk (already done in confirm step)
-            st.write("Patient JSON data ready for mapping.")
-    
-            # Call your mapping function from the imported module
-            try:
-                # Assuming your mapping module has a function like:
-                # get_mapped_output(patient_json) -> dict
-                mapped_result = mapping_collectedinfo_to_schema.get_mapped_output(patient_json)
-                st.success("Mapping to DB schema completed successfully.")
-                st.json(mapped_result)  # Show mapped data for verification
-    
-                # Save mapped data if you want
-                with open("mapped_output.json", "w") as f:
-                    json.dump(mapped_result, f, indent=2)
-    
-                # Proceed to next step or finish workflow
-                st.session_state.mapped_patient_data = mapped_result # or any next step
-                st.write("Mapping complete. You can now use this data to insert into your DB.")
-                st.session_state.step = "db_insert" 
-                st.rerun()
-                return
-            except Exception as e:
-                st.error(f"Mapping failed: {e}")
-        else:
-            st.warning("No confirmed patient JSON data available yet.")
-
-    elif st.session_state.step == "db_insert":
-        st.header("Step 6: Review and Insert Data into Database")
-        mapped_file = "mapped_output.json"
-        if os.path.exists(mapped_file):
-            with open(mapped_file, "r") as f:
-                mapped_result = json.load(f)
-            st.subheader("Mapped JSON to be Inserted")
-            st.json(mapped_result)
-
-            st.write("🔌 Using DB Config:", db_config) 
-
-            if st.button("Insert into Database"):
-                # Call the insert script as a subprocess
-                try:
-                    insert_data_from_mapped_json(mapped_file)
-                    st.success("✅ Data successfully inserted into the database.")
-                    st.session_state.step = "booking"
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"❌ Database insertion failed: {e}")
-
-                st.text("Insert Script Output:\n" + result.stdout)
-                if result.stderr:
-                    st.error("Insert Script Errors:\n" + result.stderr)
-                if "All data inserted into the database." in result.stdout:
-                    st.success("✅ Data successfully inserted into the database.")
-                    st.session_state.step = "booking"  # <-- Move to booking step
-                    st.rerun()
-                else:
-                    st.error("❌ Database insertion failed. See output above for details.")
-        else:
-            st.error("Mapped output file not found. Please complete mapping step first.")
-
-    elif st.session_state.step == "booking":
-        st.header("Step 7: Book Appointment with Recommended Specialist")
-        # Call the booking script as a subprocess
-        try:
-            result = book_appointment_from_json()  # This returns a message string
-            st.text("Booking Script Output:\n" + result)
+        elif current_step == "confirm":
+            st.header("Step 4: Confirm Mandatory Fields")
+            patient_data = st.session_state.get("patient_data", {})
+            summary = st.session_state.get("summary", "")
+            followup_notes = st.session_state.get("followup_notes", "")
+            recommended_specialist = st.session_state.get("recommended_specialist", [])
+            specialist_rationale = st.session_state.get("specialist_rationale", "")
             
-            if "Appointment booked" in result.stdout:
-                st.success("✅ Appointment successfully booked!")
-                # Optionally, show the details more clearly
-                # st.markdown(f"*Details:*\n\n{result.stdout}\n")
-            elif "No available slots found" in result.stdout:
-                st.warning("❌ No available slots found for any recommended specialist in the next 7 days.")
+            final_json = {
+                "summary": summary,
+                "patient_data": patient_data,
+                "followup_notes": followup_notes,
+                "recommended_specialist": recommended_specialist,
+                "specialist_rationale": specialist_rationale,
+                "status": "complete"
+            }
+
+            updated_data, confirmed, message = confirm_mandatory_fields(final_json)
+            if confirmed:
+                st.success(f"✅ {message}")
+                with st.expander("Final Patient Data JSON"):
+                    st.json(updated_data)
+                st.session_state.final_patient_json = updated_data
+                with open("final_patient_summary.json", "w") as f:
+                    json.dump(updated_data, f, indent=2)
+                if st.button("Proceed to Mapping"):
+                    st.session_state.step = "mapping"
+                    st.experimental_rerun()
             else:
-                st.info("See output above for booking details.")
+                st.warning("⚠️ Please provide the missing information.")
+                with st.expander("Missing Info Details"):
+                    st.write(message)
 
-        except Exception as e:
-            st.error(f"❌ Booking failed: {e}")
-        # Show a "Finish" button to move to done step
-        if st.button("Finish"):
-            st.session_state.step = "done"
-            st.rerun()
+        elif current_step == "mapping":
+            st.header("Step 5: Map Collected Info to Database Schema")
+            patient_json = st.session_state.get("final_patient_json", {})
+            if patient_json:
+                st.info("Patient data ready for mapping to DB schema.")
+                try:
+                    mapped_result = mapping_collectedinfo_to_schema.get_mapped_output(patient_json)
+                    st.success("✅ Mapping to DB schema completed successfully.")
+                    with st.expander("Mapped Data Preview"):
+                        st.json(mapped_result)
+                    with open("mapped_output.json", "w") as f:
+                        json.dump(mapped_result, f, indent=2)
+                    st.session_state.mapped_patient_data = mapped_result
+                    if st.button("Proceed to Database Insert"):
+                        st.session_state.step = "db_insert"
+                        st.experimental_rerun()
+                except Exception as e:
+                    st.error(f"❌ Mapping failed: {e}")
+            else:
+                st.warning("⚠️ No confirmed patient JSON data available. Please complete previous steps.")
 
-    else:
-        st.header("All steps completed.")
-        st.write("Thank you! The medical intake process is finished.")
+        elif current_step == "db_insert":
+            st.header("Step 6: Review and Insert Data into Database")
+            mapped_file = "mapped_output.json"
+            if os.path.exists(mapped_file):
+                with open(mapped_file, "r") as f:
+                    mapped_result = json.load(f)
+                st.subheader("Mapped JSON to be Inserted")
+                with st.expander("View JSON Data"):
+                    st.json(mapped_result)
+                
+                st.write("🔌 Using DB Config:")
+                st.json(db_config)
 
+                if st.button("Insert into Database"):
+                    try:
+                        insert_data_from_mapped_json(mapped_file)
+                        st.success("✅ Data successfully inserted into the database.")
+                        st.session_state.step = "booking"
+                        st.experimental_rerun()
+                    except Exception as e:
+                        st.error(f"❌ Database insertion failed: {e}")
+            else:
+                st.error("❌ Mapped output file not found. Please complete mapping step first.")
+
+        
+        elif current_step == "booking":
+            st.header("Step 7: Book Appointment with Recommended Specialist")
+            try:
+                result = book_appointment_from_json()  # returns message string or object
+                st.text("Booking Script Output:\n" + result)
+                if "Appointment booked" in result:
+                    st.success("✅ Appointment successfully booked!")
+                elif "No available slots found" in result:
+                    st.warning("⚠️ No available slots found for any recommended specialist in the next 7 days.")
+                else:
+                    st.info("See output above for booking details.")
+            except Exception as e:
+                st.error(f"❌ Booking failed: {e}")
+            
+            if st.button("Finish"):
+                st.session_state.step = "done"
+                st.experimental_rerun()
+
+        elif current_step == "done":
+            st.balloons()
+            st.header("🎉 All steps completed.")
+            st.success("Thank you! The medical intake process is finished.")
+            
 if __name__ == "__main__":
     main()
