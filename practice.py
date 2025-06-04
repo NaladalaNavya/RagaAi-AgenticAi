@@ -309,7 +309,7 @@ Begin your check and ask for missing info as needed.
         else:
             st.rerun()
 
-    return final_json, False, ""
+    return st.session_state.updated_final_data, False,""
 
 
 def main():
