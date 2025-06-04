@@ -13,7 +13,7 @@ DB_HOST = "shinkansen.proxy.rlwy.net"
 DB_PORT = 10373
 DB_USER = "root"
 DB_PASSWORD = "XsWXLlpGcfGdlAnNSpEkzEZnMvqcBbMp"
-DB_NAME = "railway"
+DB_NAME = "hospital_system_new"
 
 # Connect to the database
 connection = pymysql.connect(
