@@ -79,6 +79,7 @@ Your job is to collect all necessary health details step-by-step, one question a
   "patient_data": {
     "name": "Alice",
     "age": 34,
+    "email": "G2JlB@example.com",
     "gender": "Female",
     "symptoms": "...",
     "past_surgeries": "...",
