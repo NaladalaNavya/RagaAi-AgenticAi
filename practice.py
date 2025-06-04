@@ -393,7 +393,6 @@ def main():
             updated_data, confirmed, message = confirm_mandatory_fields(final_json)
             if confirmed:
                 st.success(f"✅ {message}")
-                st.write("Final Patient Data:", updated_data)
                 with st.expander("Final Patient Data JSON"):
                     st.json(updated_data)
                 st.session_state.final_patient_json = updated_data
@@ -409,8 +408,13 @@ def main():
         elif current_step == "mapping":
             st.header("Step 5: Map Collected Info to Database Schema")
             patient_json = st.session_state.get("final_patient_json", {})
-            if patient_json:
-                st.info("Patient data ready for mapping to DB schema.")
+            if not patient_json:
+                st.warning("⚠️ No confirmed patient data available. Returning to confirmation step.")
+                st.session_state.step = "confirm"
+                st.rerun()
+
+            st.json(patient_json)
+            if st.button("🗺️ Run Mapping"):
                 try:
                     mapped_result = mapping_collectedinfo_to_schema.get_mapped_output(patient_json)
                     st.success("✅ Mapping to DB schema completed successfully.")
