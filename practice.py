@@ -345,7 +345,7 @@ def main():
                 st.session_state.patient_data = patient_data
                 st.session_state.summary = summary
                 st.session_state.step = "followup"
-                st.experimental_rerun()
+                st.rerun()
 
         elif current_step == "followup":
             st.header("Step 2: Follow-up Questions for Missing Info")
@@ -358,7 +358,7 @@ def main():
                 st.session_state.patient_data = updated_data
                 st.session_state.followup_notes = notes
                 st.session_state.step = "specialist"
-                st.experimental_rerun()
+                st.rerun()
 
         elif current_step == "specialist":
             st.header("Step 3: Specialist Recommendation")
@@ -371,7 +371,7 @@ def main():
             st.session_state.specialist_rationale = rationale
             if st.button("Confirm Recommendations & Continue"):
                 st.session_state.step = "confirm"
-                st.experimental_rerun()
+                st.rerun()
 
         elif current_step == "confirm":
             st.header("Step 4: Confirm Mandatory Fields")
@@ -400,7 +400,7 @@ def main():
                     json.dump(updated_data, f, indent=2)
                 if st.button("Proceed to Mapping"):
                     st.session_state.step = "mapping"
-                    st.experimental_rerun()
+                    st.rerun()
             else:
                 st.warning("⚠️ Please provide the missing information.")
                 with st.expander("Missing Info Details"):
@@ -421,7 +421,7 @@ def main():
                     st.session_state.mapped_patient_data = mapped_result
                     if st.button("Proceed to Database Insert"):
                         st.session_state.step = "db_insert"
-                        st.experimental_rerun()
+                        st.rerun()
                 except Exception as e:
                     st.error(f"❌ Mapping failed: {e}")
             else:
@@ -445,7 +445,7 @@ def main():
                         insert_data_from_mapped_json(mapped_file)
                         st.success("✅ Data successfully inserted into the database.")
                         st.session_state.step = "booking"
-                        st.experimental_rerun()
+                        st.rerun()
                     except Exception as e:
                         st.error(f"❌ Database insertion failed: {e}")
             else:
@@ -468,12 +468,12 @@ def main():
             
             if st.button("Finish"):
                 st.session_state.step = "done"
-                st.experimental_rerun()
+                st.rerun()
 
         elif current_step == "done":
             st.balloons()
             st.header("🎉 All steps completed.")
             st.success("Thank you! The medical intake process is finished.")
-            
+
 if __name__ == "__main__":
     main()
