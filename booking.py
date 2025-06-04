@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 import json
 from dotenv import load_dotenv
 import os
-from pymysql.cursors import DictCursor
 
 load_dotenv()
 
@@ -60,7 +59,7 @@ def book_appointment_from_json(json_file_path="final_patient_summary.json"):
         raise ValueError("Patient email not found in JSON.")
 
     conn = pymysql.connect(**db_config)
-    cursor = conn.cursor(cursorclass=DictCursor)
+    cursor = conn.cursor()
 
     try:
         patient_id = get_patient_id_by_email(cursor, patient_email)
