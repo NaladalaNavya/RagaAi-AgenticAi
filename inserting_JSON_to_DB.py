@@ -48,11 +48,14 @@ def insert_data_from_mapped_json(file_path):
     cursor = conn.cursor()
 
     try:
+        print("🔄 Starting database insert...")
         for item in data:
             table = item["table"]
             if "columns" in item:
+                print(f"📥 Inserting single record into '{table}': {item['columns']}")
                 insert_single_record(cursor, table, item["columns"])
             elif "records" in item:
+                print(f"📥 Inserting multiple records into '{table}': {item['records']}")
                 insert_multiple_records(cursor, table, item["records"])
         conn.commit()
         print(" All data inserted into the database.")

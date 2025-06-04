@@ -426,7 +426,9 @@ def main():
             if st.button("Insert into Database"):
                 # Call the insert script as a subprocess
                 try:
+                    st.info("🟡 Inserting data into database...")
                     insert_data_from_mapped_json(mapped_file)
+                    
                     st.success("✅ Data successfully inserted into the database.")
                     st.session_state.step = "booking"
                     st.rerun()
