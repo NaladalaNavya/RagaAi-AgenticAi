@@ -1,3 +1,5 @@
+# booking.py
+
 import pymysql
 from datetime import datetime, timedelta
 import json
@@ -13,7 +15,6 @@ db_config = {
     "database": os.getenv("DB_NAME"),
     "port": int(os.getenv("DB_PORT", 3306))
 }
-
 
 def parse_available_days(days_str):
     days_str = days_str.strip().lower()
@@ -45,20 +46,17 @@ def parse_available_days(days_str):
 def get_patient_id_by_email(cursor, email):
     cursor.execute("SELECT patient_id FROM patients WHERE email = %s", (email,))
     result = cursor.fetchone()
-    if result:
-        return result['patient_id']
-    else:
-        return None  # Patient not found
+    return result['patient_id'] if result else None
 
-def main():
-    with open("final_patient_summary.json") as f:
+def book_appointment_from_json(json_file_path="final_patient_summary.json"):
+    with open(json_file_path) as f:
         data = json.load(f)
+
     recommended_specialists = data.get("recommended_specialist", [])
     patient_email = data["patient_data"].get("email")
 
     if not patient_email:
-        print(" Patient email not found in JSON.")
-        return
+        raise ValueError("Patient email not found in JSON.")
 
     conn = pymysql.connect(**db_config)
     cursor = conn.cursor(dictionary=True)
@@ -66,24 +64,19 @@ def main():
     try:
         patient_id = get_patient_id_by_email(cursor, patient_email)
         if not patient_id:
-            print(f" Patient with email {patient_email} not found in database.")
-            return
+            raise ValueError(f"Patient with email {patient_email} not found in database.")
 
         for specialist in recommended_specialists:
-            print(f"Looking for doctors specializing in: {specialist}")
             cursor.execute("SELECT * FROM doctors WHERE specialization = %s", (specialist,))
             doctors = cursor.fetchall()
             if not doctors:
-                print(f"No doctors found for specialization: {specialist}")
                 continue
 
             for doctor in doctors:
-                print(f"Checking doctor: {doctor['full_name']} with available days: {doctor['available_days']}")
                 available_days = parse_available_days(doctor["available_days"])
                 try:
                     available_slots = json.loads(doctor["available_slots"])
                 except Exception as e:
-                    print(f"Error parsing slots JSON for doctor {doctor['full_name']}: {e}")
                     continue
 
                 for i in range(7):
@@ -98,6 +91,7 @@ def main():
                                 SELECT 1 FROM appointments
                                 WHERE doctor_id = %s AND appointment_date = %s AND appointment_time = %s
                             """, (doctor["doctor_id"], check_date.date(), slot_time))
+
                             if not cursor.fetchone():
                                 cursor.execute("""
                                     INSERT INTO appointments 
@@ -107,13 +101,12 @@ def main():
                                     patient_id, doctor["doctor_id"], check_date.date(), slot_time, 1
                                 ))
                                 conn.commit()
-                                print(f" Appointment booked with Dr. {doctor['full_name']} on {check_date.date()} at {slot_time}")
-                                return
-        print(" No available slots found for any recommended specialist in the next 7 days.")
-
+                                return f"Appointment booked with Dr. {doctor['full_name']} on {check_date.date()} at {slot_time}"
+        return "No available slots found for any recommended specialist in the next 7 days."
     finally:
         cursor.close()
         conn.close()
 
+# Only run main if script is run directly
 if __name__ == "__main__":
-    main()
+    print(book_appointment_from_json())

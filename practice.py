@@ -4,7 +4,8 @@ import streamlit as st
 from dotenv import load_dotenv
 import google.generativeai as genai
 import mapping_collectedinfo_to_schema 
-from inserting_JSON_to_DB import insert_data_from_mapped_json # <-- Add this import at the top
+from inserting_JSON_to_DB import insert_data_from_mapped_json
+from booking import book_appointment_from_json # <-- Add this import at the top
 import mysql.connector
 import subprocess
 import pymysql
@@ -446,21 +447,20 @@ def main():
     elif st.session_state.step == "booking":
         st.header("Step 7: Book Appointment with Recommended Specialist")
         # Call the booking script as a subprocess
-        result = subprocess.run(
-            ["python", "booking.py"],
-            capture_output=True, text=True
-        )
-        st.text("Booking Script Output:\n" + result.stdout)
-        if result.stderr:
-            st.error("Booking Script Errors:\n" + result.stderr)
-        if "Appointment booked" in result.stdout:
-            st.success("✅ Appointment successfully booked!")
-            # Optionally, show the details more clearly
-            st.markdown(f"*Details:*\n\n{result.stdout}\n")
-        elif "No available slots found" in result.stdout:
-            st.warning("❌ No available slots found for any recommended specialist in the next 7 days.")
-        else:
-            st.info("See output above for booking details.")
+        try:
+            result = book_appointment_from_json()  # This returns a message string
+            st.text("Booking Script Output:\n" + result)
+            
+            if "Appointment booked" in result.stdout:
+                st.success("✅ Appointment successfully booked!")
+                # Optionally, show the details more clearly
+                # st.markdown(f"*Details:*\n\n{result.stdout}\n")
+            elif "No available slots found" in result.stdout:
+                st.warning("❌ No available slots found for any recommended specialist in the next 7 days.")
+            else:
+                st.info("See output above for booking details.")
+                
+        except Exception as e:
         # Show a "Finish" button to move to done step
         if st.button("Finish"):
             st.session_state.step = "done"
