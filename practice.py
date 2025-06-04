@@ -245,7 +245,7 @@ Begin your check and ask for missing info as needed.
         st.session_state.confirm_response = model.start_chat(history=[])
         reply = st.session_state.confirm_response.send_message(prompt)
         st.session_state.confirm_history = [("bot", reply.text.strip())]
-        st.session_state.updated_final_data = dict(final_json)  # copy original data
+        st.session_state.updated_final_data = json.loads(json.dumps(final_json)))  # copy original data
     else:
         reply = st.session_state.confirm_response
 
