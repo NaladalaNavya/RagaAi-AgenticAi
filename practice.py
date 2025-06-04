@@ -373,14 +373,18 @@ def main():
         updated_data, confirmed, message = confirm_mandatory_fields(final_json)
         if confirmed:
             st.success(message)
-            st.write("Final Patient Data:", updated_data)
-            st.session_state.final_patient_json = updated_data
+            st.subheader("✅ Final Patient Data (Validated)")
+            st.json(updated_data)  # Show the full validated JSON clearly
+            # Save to file and state (still)
             with open("final_patient_summary.json", "w") as f:
                 json.dump(updated_data, f, indent=2)
-            st.session_state.step = "mapping"  # <-- Move to mapping step
-            st.rerun()
+            st.session_state.final_patient_json = updated_data
+            # Add a "Proceed" button
+            if st.button("Proceed to Mapping"):
+                st.session_state.step = "mapping"
+                st.rerun()
         else:
-            st.info("Please provide the missing information.")
+            st.warning("Please provide the missing mandatory information before proceeding.")
 
     elif st.session_state.step == "mapping":
         st.header("Step 5: Map Collected Info to DB Schema")
@@ -462,7 +466,7 @@ def main():
 
         except Exception as e:
             st.error(f"❌ Booking failed: {e}")
-            
+
         # Show a "Finish" button to move to done step
         if st.button("Finish"):
             st.session_state.step = "done"
