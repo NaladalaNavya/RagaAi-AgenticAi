@@ -459,8 +459,10 @@ def main():
                 st.warning("❌ No available slots found for any recommended specialist in the next 7 days.")
             else:
                 st.info("See output above for booking details.")
-                
+
         except Exception as e:
+            st.error(f"❌ Booking failed: {e}")
+            
         # Show a "Finish" button to move to done step
         if st.button("Finish"):
             st.session_state.step = "done"
