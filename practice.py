@@ -393,18 +393,18 @@ def main():
             updated_data, confirmed, message = confirm_mandatory_fields(final_json)
             if confirmed:
                 st.success(f"✅ {message}")
+                st.write("Final Patient Data:", updated_data)
                 with st.expander("Final Patient Data JSON"):
                     st.json(updated_data)
                 st.session_state.final_patient_json = updated_data
                 with open("final_patient_summary.json", "w") as f:
                     json.dump(updated_data, f, indent=2)
-                if st.button("Proceed to Mapping"):
+
+                if st.button("✅ Proceed to Mapping"):
                     st.session_state.step = "mapping"
                     st.rerun()
             else:
-                st.warning("⚠️ Please provide the missing information.")
-                with st.expander("Missing Info Details"):
-                    st.write(message)
+                st.info("Please provide the missing information.")
 
         elif current_step == "mapping":
             st.header("Step 5: Map Collected Info to Database Schema")
