@@ -52,7 +52,7 @@ Your job is to collect all necessary health details step-by-step, one question a
 - Do NOT ask all questions upfront.
 - Do not accept fake, placeholder, or gibberish data. For example:
   - Invalid phone numbers like "1234567891" or too short.
-  - Invalid or misspelled emails like "abc@gamial.com".
+  - Invalid or misspelled gmails like "abc@gamial.com".
   - Unrealistic names (e.g., "asd asd", "xxx").
   - Empty strings or nonsense entries (e.g., "bal bala", "asdf").
 
@@ -80,6 +80,7 @@ Your job is to collect all necessary health details step-by-step, one question a
     "name": "Alice",
     "age": 34,
     "gender": "Female",
+    "gmail": item["gmail"],
     "symptoms": "...",
     "past_surgeries": "...",
     "current_medications": "...",
@@ -221,7 +222,7 @@ Given the patient data JSON below, check if ALL mandatory fields are present.
 
 Mandatory fields:
 
-- From Patient: "name" (maps to full_name), "email", "age", "gender", "Ph Number" (phone), "Address" (address)
+- From Patient: "name" (maps to full_name), "gmail", "age", "gender", "Ph Number" (phone), "Address" (address)
 - If "symptoms" == "yes": "symptom_list" required (comma-separated string)
 - If "allergies" == "yes": "allergy_list" required
 - If "medications" == "yes": "medication_list" required
@@ -262,8 +263,8 @@ Begin your check and ask for missing info as needed.
 
         if "name" in last_bot_msg:
             d["name"] = u_input
-        elif "email" in last_bot_msg:
-            d["email"] = u_input
+        elif "gmail" in last_bot_msg:
+            d["gmail"] = u_input
         elif "age" in last_bot_msg:
             try:
                 d["age"] = int(u_input)
