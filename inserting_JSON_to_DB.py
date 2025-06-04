@@ -13,8 +13,6 @@ db_config = {
     "database": os.getenv("DB_NAME"),
     "port": int(os.getenv("DB_PORT",10373))
 }
-
-# Connect to DB
 def connect_to_db():
     return pymysql.connect(**db_config)
 

@@ -4,7 +4,7 @@ import streamlit as st
 from dotenv import load_dotenv
 import google.generativeai as genai
 import mapping_collectedinfo_to_schema 
-from inserting_JSON_to_DB import insert_data_from_mapped_json
+from inserting_JSON_to_DB import db_config,insert_data_from_mapped_json
 from booking import book_appointment_from_json # <-- Add this import at the top
 import mysql.connector
 import subprocess
@@ -423,12 +423,12 @@ def main():
             st.subheader("Mapped JSON to be Inserted")
             st.json(mapped_result)
 
+            st.write("🔌 Using DB Config:", db_config) 
+
             if st.button("Insert into Database"):
                 # Call the insert script as a subprocess
                 try:
-                    st.info("🟡 Inserting data into database...")
                     insert_data_from_mapped_json(mapped_file)
-                    
                     st.success("✅ Data successfully inserted into the database.")
                     st.session_state.step = "booking"
                     st.rerun()
