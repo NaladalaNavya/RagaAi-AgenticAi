@@ -4,4 +4,4 @@ google-generativeai
 langgraph
 streamlit
 mysql-connector-python
-pymysql
+pymysql==1.1.1
