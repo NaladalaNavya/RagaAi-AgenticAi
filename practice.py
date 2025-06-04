@@ -9,7 +9,7 @@ import subprocess
 import pymysql
 
 # Load secrets
-DB_HOST = "shinkansen.proxy.rlwy.net"
+"""DB_HOST = "shinkansen.proxy.rlwy.net"
 DB_PORT = 10373
 DB_USER = "root"
 DB_PASSWORD = "XsWXLlpGcfGdlAnNSpEkzEZnMvqcBbMp"
@@ -24,7 +24,7 @@ connection = pymysql.connect(
     database=DB_NAME
 )
 
-print("Connected successfully!")
+print("Connected successfully!")"""
 
 
 # Load environment variables
