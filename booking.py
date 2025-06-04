@@ -1,4 +1,4 @@
-import mysql.connector
+import pymysql
 from datetime import datetime, timedelta
 import json
 from dotenv import load_dotenv
@@ -10,8 +10,10 @@ db_config = {
     "host": os.getenv("DB_HOST"),
     "user": os.getenv("DB_USER"),
     "password": os.getenv("DB_PASSWORD"),
-    "database": os.getenv("DB_NAME")
+    "database": os.getenv("DB_NAME"),
+    "port": int(os.getenv("DB_PORT", 3306))
 }
+
 
 def parse_available_days(days_str):
     days_str = days_str.strip().lower()
@@ -58,7 +60,7 @@ def main():
         print(" Patient email not found in JSON.")
         return
 
-    conn = mysql.connector.connect(**db_config)
+    conn = pymysql.connect(**db_config)
     cursor = conn.cursor(dictionary=True)
 
     try:
